@@ -22,4 +22,4 @@ class DBClient {
 
 const dbclient = new DBClient();
 
-module.exports = dbclient
+module.exports = dbclient;
