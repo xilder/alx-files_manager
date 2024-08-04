@@ -20,6 +20,7 @@ class UsersController {
 
     if (user) {
       res.status(400).json({ error: 'Already exist' });
+      return;
     }
 
     const newUser = { email, password: sha1(password) };
