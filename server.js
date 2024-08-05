@@ -7,7 +7,7 @@ app.use(express.json());
 addRoutes(app);
 
 app.listen(port, () => {
-  console.log(`The server is listening on port: ${port}`);
+  console.log(`Server running on port: ${port}`);
 });
 
 module.exports = app;

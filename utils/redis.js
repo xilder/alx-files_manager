@@ -10,18 +10,22 @@ class RedisClient {
       this.isConnected = false;
     });
   }
+
   isAlive() {
     return this.isConnected;
   }
+
   async get(key) {
     const redisGet = promisify(this.client.get).bind(this.client);
     const value = await redisGet(key);
     return value;
   }
+
   async set(key, value, exp) {
     const redisSetex = promisify(this.client.setex).bind(this.client);
     await redisSetex(key, exp, value);
   }
+
   async del(key) {
     const redisDel = promisify(this.client.del).bind(this.client);
     await redisDel(key);
