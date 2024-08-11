@@ -1,10 +1,13 @@
+import { ObjectId } from 'mongodb';
 import dbClient from './db';
+import redisClient from './redis';
 
 const userUtils = {
-  async getUser() {
-    const users = await dbClient.usersCollection();
-    console.log(users);
-    return users;
+  async getUserWithToken(req) {
+    const xToken = req.header('X-Token');
+    const userId = xToken ? await redisClient.get(`auth_${xToken}`) : null;
+    const user = await dbClient.getUser({ _id: ObjectId(userId) });
+    return user;
   },
 };
 

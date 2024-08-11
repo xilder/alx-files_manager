@@ -1,4 +1,5 @@
 import MongoClient from 'mongodb/lib/mongo_client';
+import { ObjectId } from 'mongodb';
 
 const host = process.env.DB_HOST || 'localhost';
 const port = process.env.DB_PORT || 27017;
@@ -32,11 +33,20 @@ class DBClient {
   }
 
   async getUser(params) {
-    return this.client.db(db).collection('users').findOne(params);
+    let query = params;
+    if (Object.keys(params).includes('_id')) {
+      query = { ...params, _id: ObjectId(params._id) };
+    }
+    return this.client.db(db).collection('users').findOne(query);
   }
 
   async getFile(params) {
-    return this.client.db(db).collection('files').findOne(params);
+    let query = params;
+    if (Object.keys(params).includes('parentId')) {
+      query = { ...params, _id: ObjectId(params.parentId) };
+      delete query.parentId;
+    }
+    return this.client.db(db).collection('files').findOne(query);
   }
 }
 
