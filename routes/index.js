@@ -21,7 +21,10 @@ const addRoutes = (app) => {
   router.get('/disconnect', (req, res) => AuthController.getDisconnect(req, res));
 
   // upload files
-  router.post('/files', (req, res) => FilesController.postUpload(req, res))
+  router.post('/files', (req, res) => FilesController.postUpload(req, res));
+
+  router.get('/files/:id', (req, res) => FilesController.getShow(req, res));
+  router.get('/files', (req, res) => FilesController.getIndex(req, res));
 };
 
 module.exports = addRoutes;

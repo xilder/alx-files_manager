@@ -14,9 +14,7 @@ const writeFileAsync = promisify(writeFile);
 const fileUtils = {
   writeFile: async ({ userId, name, type, parentId, isPublic, data }) => {
     const id = uuid4();
-    console.log(id)
     const baseDir = join(FOLDER_PATH, id);
-    console.log(baseDir)
 
     await mkDirAsync(FOLDER_PATH, { recursive: true });
     await writeFileAsync(baseDir, Buffer.from(data, 'base64'));

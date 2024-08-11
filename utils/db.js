@@ -42,9 +42,9 @@ class DBClient {
 
   async getFile(params) {
     let query = params;
-    if (Object.keys(params).includes('parentId')) {
-      query = { ...params, _id: ObjectId(params.parentId) };
-      delete query.parentId;
+    if (Object.keys(params).includes('objParentId')) {
+      query = { ...params, _id: params.objParentId };
+      delete query.objParentId;
     }
     return this.client.db(db).collection('files').findOne(query);
   }
