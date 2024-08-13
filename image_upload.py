@@ -2,7 +2,7 @@ import base64
 import requests
 import sys
 
-file_path = '/tmp/files_manager/e273eaf7-cd7e-4f53-8f96-08c1d9b6c358'
+file_path = sys.argv[1]
 file_name = file_path.split('/')[-1]
 
 file_encoded = None

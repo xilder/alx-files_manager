@@ -1,6 +1,7 @@
+import { contentType } from 'mime-types';
 import { join } from 'path';
 import { v4 as uuid4 } from 'uuid';
-import { mkdir, writeFile, realpath } from 'fs';
+import { mkdir, writeFile, realpath, existsSync } from 'fs';
 import { promisify } from 'util';
 import { ObjectId } from 'mongodb';
 import dbClient from './db';
@@ -19,7 +20,6 @@ const fileUtils = {
     await mkDirAsync(FOLDER_PATH, { recursive: true });
     await writeFileAsync(baseDir, Buffer.from(data, 'base64'));
     const localPath = await realpathAsync(baseDir);
-    // console.log(localPath);
 
     const newFile = {
       userId: ObjectId(userId),
@@ -60,6 +60,14 @@ const fileUtils = {
       parentId,
       id: newFolder.insertedId.toString(),
     };
+  },
+
+  sendFile: async (res, file, realFilePath) => {
+    res.setHeader(
+      'Content-Type',
+      contentType(file.name) || 'text/plain; charset=utf-8'
+    );
+    return res.status(200).sendFile(realFilePath);
   },
 };
 

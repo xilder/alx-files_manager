@@ -48,6 +48,17 @@ class DBClient {
     }
     return this.client.db(db).collection('files').findOne(query);
   }
+
+  async updateFile(params, value) {
+    await this.client
+      .db(db)
+      .collection('files')
+      .updateOne(params, { $set: { isPublic: value } });
+  }
+
+  async paginateFiles(pipeline) {
+    return this.client.db(db).collection('files').aggregate(pipeline);
+  }
 }
 
 const dbclient = new DBClient();

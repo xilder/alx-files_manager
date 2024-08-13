@@ -5,29 +5,27 @@ import dbClient from '../utils/db';
 
 class AuthController {
   static async getConnect(req, res) {
-    const authorization = req.header('Authorization') || '';
-    const credentials = authorization.split(' ')[1];
+    try {
+      const authorization = req.header('Authorization') || '';
+      const credentials = authorization.split(' ')[1];
 
-    if (!credentials) {
-      return res.status(401).send({ error: 'Unauthorized' });
+      const decodedCredentials = Buffer.from(credentials, 'base64').toString(
+        'utf-8',
+      );
+
+      const [email, password] = decodedCredentials.split(':');
+      const sha1Password = sha1(password);
+
+      const user = await dbClient.getUser({ email, password: sha1Password });
+      // console.log(user)
+      const token = uuid4();
+
+      await redisClient.set(`auth_${token}`, user._id.toString(), 24 * 60 * 60);
+      return res.status(200).json({ token });
+    } catch (err) {
+      console.log(err);
+      return res.status(401).json({ error: 'Unauthorized' });
     }
-
-    const decodedCredentials = Buffer.from(credentials, 'base64').toString(
-      'utf-8',
-    );
-
-    const [email, password] = decodedCredentials.split(':');
-
-    if (!email || !password) {
-      return res.status(401).send({ error: 'Unauthorized' });
-    }
-    const sha1Password = sha1(password);
-
-    const user = await dbClient.getUser({ email, password: sha1Password });
-    const token = uuid4();
-
-    await redisClient.set(`auth_${token}`, user._id.toString(), 24 * 60 * 60);
-    return res.status(200).json({ token });
   }
 
   static async getDisconnect(req, res) {

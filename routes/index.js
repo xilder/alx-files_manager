@@ -23,8 +23,16 @@ const addRoutes = (app) => {
   // upload files
   router.post('/files', (req, res) => FilesController.postUpload(req, res));
 
+  // get a particular file or get a pagination of files
   router.get('/files/:id', (req, res) => FilesController.getShow(req, res));
   router.get('/files', (req, res) => FilesController.getIndex(req, res));
+
+  // make a file public or not
+  router.put('/files/:id/publish', (req, res) => FilesController.putPublish(req, res));
+  router.put('/files/:id/unpublish', (req, res) => FilesController.putUnpublish(req, res));
+
+  // get file from the server
+  router.get('/files/:id/data', (req, res) => FilesController.getFile(req, res))
 };
 
 module.exports = addRoutes;
